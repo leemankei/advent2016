@@ -6,23 +6,19 @@ d:"I"$1_/:s;
 s:c,'d;
 s:s,'count[s]#`x`y;
 
+.k.path:.k.ans:();
 path:{[x;y]
     nextDir:{[now;move] d mod[@[`L`R!-1 1;move] + first where d = now;count d:`N`E`S`W] };
     m:`N`E`S`W!(1 0; 0 1;-1 0;0 -1);
-    (x[0] + m[x 1] * y[1] * (`L`R!-1 1)@y[0]; nextDir[x[1];y[0]])
+    dest:x[0] + m[x 1] * y[1] * (`L`R!-1 1)@y[0];
+    p:{ (min(x;y)) +/: (,/:\:).{$[x;til abs x;x]} each y - x};
+    pp:enlist[dest],1 _ p[x[0];dest];
+    0N!-3!pp;
+    if[any pp in .k.path; 
+        .k.ans,:pp inter .k.path];
+    .k.path,:pp;
+    (dest; nextDir[x[1];y[0]])
 }\[(0 0;`N);s];
 
 sum abs last[path][0]
-
-deltas enlist[0 0],
-path[;0]
-
-x:8 0; y: 4 0
-x:4 0; y: 8 0
-x:0 4; y: 0 8
-x:2 4; y: 2 8
-p[x;y]
-p:{
-    (min(x;y)) +/: (,/:\:).{$[x;til abs x;x]} each y - x
-    };
-
+sum abs first .k.ans
